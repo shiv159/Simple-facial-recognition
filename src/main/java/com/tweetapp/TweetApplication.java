@@ -17,7 +17,7 @@ public class TweetApplication {
 	
 	public static void main(String[] args) {
 		Logger logger = LoggerFactory.getLogger(TweetApplication.class);
-		logger.debug("===========> Tweet App Starting @Shivam <===========");
+		//logger.debug("===========> Tweet App Starting<===========");
 		SpringApplication.run(TweetApplication.class, args);
 	}
 }
