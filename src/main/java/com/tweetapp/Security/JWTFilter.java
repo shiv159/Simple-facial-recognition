@@ -10,7 +10,6 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.bson.types.ObjectId;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.cors.CorsConfiguration;
@@ -53,7 +52,7 @@ public class JWTFilter extends GenericFilterBean {
 			if (token == null || !tokenService.isTokenValid(token)) {
 				response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
 			} else {
-				ObjectId userId = new ObjectId(tokenService.getUserIdFromToken(token));
+				String userId = tokenService.getUserIdFromToken(token);
 				request.setAttribute("userId", userId);
 				filterChain.doFilter(req, res);// pass request furthur
 

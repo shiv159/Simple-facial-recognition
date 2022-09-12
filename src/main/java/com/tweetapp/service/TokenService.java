@@ -5,7 +5,6 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTCreationException;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
-import org.bson.types.ObjectId;
 import org.springframework.stereotype.Service;
 
 import java.io.UnsupportedEncodingException;
@@ -16,7 +15,7 @@ public class TokenService {
 
     public static final String TOKEN_SECRET = "s4T2zOIWHMM1sxq";
 
-    public String createToken(ObjectId userId) {
+    public String createToken(String userId) {
         try {
             Algorithm algorithm = Algorithm.HMAC256(TOKEN_SECRET);
             String token = JWT.create()

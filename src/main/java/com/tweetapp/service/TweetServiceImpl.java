@@ -1,5 +1,6 @@
 package com.tweetapp.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -76,15 +77,25 @@ public class TweetServiceImpl implements TweetService {
 	public List<Tweet> getAllTweets() {
 		producerService.sendMessage("Received request to send all tweet data.");
 		logger.info("Retriving all the tweet data");
-		return tweetRepository.findAll();
+	//	return tweetRepository.findAll();
+		return  tweetRepository.findAll();
 	}
 
 	@Override
 	public List<Tweet> getAllTweetsByUsername(String username) {
 		logger.info("Retriving tweets of user: " + username);
-	//	User user =userRepository.findByUsername(username);
+	//User user =userRepository.findByUsername(username);
 		
-		List<Tweet> tweetList= tweetRepository.findTweetByUserUsername(username);
+	//	List<Tweet> tweetList= tweetRepository.findByUser(user);
+		List<Tweet> allTweets =tweetRepository.findAll();
+		List<Tweet> tweetList=new ArrayList<>();
+		for(int i=0;i<allTweets.size();i++)
+		{
+			Tweet tempTweet=allTweets.get(i);
+			if(tempTweet.getUser().getUsername().equals(username)) {
+				tweetList.add(tempTweet);
+			}
+		}
 		logger.info("tweet list"+tweetList.toString());
 		return tweetList;
 		
@@ -126,7 +137,10 @@ public class TweetServiceImpl implements TweetService {
 	public void likeTweetById(String tweetId, String username) {
 		Optional<TweetLiked> likedTweet = likedTweetRepository.findByIdAndUserName(tweetId, username);
 		if (likedTweet.isEmpty()) {
-			likedTweetRepository.save(new TweetLiked(tweetId, username));
+			TweetLiked tweetLiked=new TweetLiked();
+			tweetLiked.setId(tweetId);
+			tweetLiked.setUserName(username);
+			likedTweetRepository.save(tweetLiked);
 			Optional<Tweet> tweet = tweetRepository.findById(tweetId);
 			logger.info("Liked Tweet with Id: {} is {}", tweetId, tweet.get());
 			if (tweet.isPresent()) {

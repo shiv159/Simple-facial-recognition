@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import com.tweetapp.exception.InvalidUsernameOrPasswordException;
 import com.tweetapp.exception.UsernameAlreadyExists;
 import com.tweetapp.kafka.ProducerService;
+import com.tweetapp.model.Tweet;
 import com.tweetapp.model.User;
 import com.tweetapp.model.UserResponse;
 import com.tweetapp.repository.TweetRepository;
@@ -34,7 +35,7 @@ public class UserServiceImpl implements UserService {
 
 	@Autowired
 	ProducerService producerService;
-    private TweetRepository tweetRepository;
+	private TweetRepository tweetRepository;
 	private UserRepository userRepository;
 	private TokenService tokenService;
 
@@ -121,13 +122,16 @@ public class UserServiceImpl implements UserService {
 		Map<String, String> map = new HashMap<String, String>();
 		User user = userRepository.findByUsername(username);
 		if (user != null) {
-			// 
+			//
 			String otp = emailSenderService.genrateOtp();
 			user.setPassword(otp);
-			emailSenderService.sendMail(user.getEmail(), "Your new OTP " + otp, "TweetApp Password Reset");
+
+			emailSenderService.sendMail(user.getEmail(), "Your new OTP  " + otp, "TweetApp Password Reset");
 			userRepository.save(user);
+
 			map.put("newPassword", user.getPassword());
 			map.put("resetStatus", Status);
+		
 			logger.info("Completed..");
 			return map;
 		} else {
